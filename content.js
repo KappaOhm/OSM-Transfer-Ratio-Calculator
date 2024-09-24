@@ -24,8 +24,8 @@ document.addEventListener("click", function() {
                 purchasePriceElement.style.color = '#e4ff03';
             } 
             else if (coefficient <= 1.45) {
-				purchasePriceElement.style.color = '#1dffad';
-			}
+                purchasePriceElement.style.color = '#1dffad';
+            }
             else {
                 purchasePriceElement.style.color = 'red';
             }
