@@ -23,10 +23,10 @@ document.addEventListener("click", function() {
             if (coefficient <= 1.54 && coefficient > 1.45) {
                 purchasePriceElement.style.color = '#e4ff03';
             } 
-			else if (coefficient <= 1.45) {
+            else if (coefficient <= 1.45) {
 				purchasePriceElement.style.color = '#1dffad';
 			}
-			else {
+            else {
                 purchasePriceElement.style.color = 'red';
             }
         } else {
