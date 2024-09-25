@@ -11,7 +11,8 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://es.onlinesoccermanager.com/Transferlist"],
+      "matches": ["https://es.onlinesoccermanager.com/Transferlist",
+                  "https://es.onlinesoccermanager.com/Squad"],
       "js": ["content.js"]
     }
   ],
