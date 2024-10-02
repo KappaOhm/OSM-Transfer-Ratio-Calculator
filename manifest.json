@@ -2,10 +2,7 @@
   "manifest_version": 3,
   "name": "OSM Transfer Ratio Calculator",
   "version": "1.0",
-  "description": "Calcula el ratio de precio de venta/valor en la lista de transferencias de OSM",
-  "permissions": [
-    "scripting"
-  ],
+  "description": "Calculates price/value ratio in the OSM when buying and selling players",
   "host_permissions": [
     "https://es.onlinesoccermanager.com/*"
   ],
@@ -16,16 +13,18 @@
       "js": ["content.js"]
     }
   ],
-  "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
-  },
   "action": {
+    "default_popup": "popup.html",
+    "default_title": "Check Player Prices",
     "default_icon": {
       "16": "icon16.png",
       "48": "icon48.png",
       "128": "icon128.png"
     }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
 }

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSM Calculator</title>
+    <style>
+        /* Popup dimensions and layout */
+        html, body {
+            width: 360px;
+            height: 440px;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Header styling */
+        h3 {
+            background-color: #34ac38; /* Green background */
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        /* Main content area */
+        .info {
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 15px auto;
+            width: 90%;
+        }
+
+        .info p {
+            color: #333;
+            font-size: 1.2em; /* Slightly larger font size */
+            margin-bottom: 10px;
+        }
+
+        /* PayPal donation button (more compact) */
+        .paypal-btn, .instructions-btn {
+            display: block; /* Change to block for vertical stacking */
+            background-color: #FFC439;
+            color: #333;
+            text-decoration: none;
+            padding: 8px 14px; /* Adjusted padding */
+            font-size: 1.2em;   /* Increased font size */
+            font-weight: bold;
+            border-radius: 14px; /* Slightly smaller border-radius */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Reduced shadow */
+            transition: background-color 0.3s ease;
+            margin: 10px auto;  /* Center the button */
+            width: auto; /* Fit button size to the content */
+        }
+
+        .paypal-btn:hover, .instructions-btn:hover {
+            background-color: #ffcd54;
+        }
+
+        /* Instructions modal styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Footer text */
+        footer {
+            text-align: center;
+            font-size: 1.1em; /* Adjusted footer font size */
+            color: #888;
+            margin-top: 10px;
+        }
+        .red {
+            color: rgba(138, 22, 22, 1);
+            font-weight: bold;
+        }
+
+        .green {
+            color: rgb(35, 175, 35);
+            font-weight: bold;
+        }
+
+        .yellow {
+            color: rgb(214, 164, 25);
+            font-weight: bold;
+        }
+        .bold {
+            color: rgba(0, 0, 0, 1);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h3>OSM Transfer Ratio Calculator</h3>
+    <div class="info">
+        <p>Created by Jeyson Ardila <img src="co.png" alt="Colombian Flag" style="width: 25px; height: auto; vertical-align: middle;"></p>
+        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jeyson.ardila@gmail.com&currency_code=USD&source=url"
+           target="_blank" class="paypal-btn">Donate via PayPal</a>
+        <a href="#" class="instructions-btn" id="instructionsBtn">Instructions</a>
+    </div>
+    <footer>Thank you for your support!</footer>
+
+    <!-- Instructions Modal -->
+    <div class="modal" id="instructionsModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h4>Instructions</h4>
+            <p>- When going to <span class="bold">TransferList</span> and clicking anywhere, price of players you cannot buy will be color 
+                <span class="red">red</span>, so that you focus on what you can buy.</p>
+            <p>- When selecting a player to buy you will be shown a <span class="bold">ratio with colors</span>. Generally a good buying ratio is 
+                <span class="green">1.5 times</span> the players price, but its OK to pay more if you need to player or want to buy for profit selling.</p>
+            <p>- <span class="bold">Below the player's price</span> you will find <span class="yellow">MAX selling price</span> 
+                (2.5 times players worth) and <span class="green">profit</span> (amount to gain if you buy at current price and sell at 2.5 times) </p>
+            <p>- In your <span class="bold">Squad</span> page, when selling players, if the <span class="bold">selling value is > 50,0M</span> 
+                the player will be very difficult to sell, so you should try selling at <span class="gree">1.9 times</span> its price instead of 2.5 times, 
+                colors will show you when the slider is in the correct position to have the player sold <span class="bold">in a reasonable amount of time</span>.</p>
+        </div>
+    </div>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="popup.js"></script>
+</body>
+</html>
+
