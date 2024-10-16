@@ -16,7 +16,6 @@ function checkPlayerPrices() {
 
 // Add an event listener for clicks
 document.addEventListener("click", function(event) {
-    // Get the modal element by its class
     checkPlayerPrices();
     const playerValueElement = document.querySelector('.player-profile-value span[data-bind^="currency: value"]');
     const purchasePriceElement = document.querySelector('.club-funds-amount[data-bind^="currency: price"]');
@@ -66,9 +65,7 @@ document.addEventListener("click", function(event) {
         const coefficient = sellingPrice / playerValue;
         const clubFundsAmountElement = document.querySelector('.player-profile-details .club-funds-amount');
 
-        if (coefficient == 2.5 && sellingPrice >= 50000000) {
-            clubFundsAmountElement.style.color = 'red';
-        } else if (coefficient >= 1.89 && coefficient <= 1.96 && sellingPrice >= 50000000) {
+        if (coefficient > 1.9 && sellingPrice >= 50000000) {
             clubFundsAmountElement.style.color = '#e4ff03';
         } else {
             clubFundsAmountElement.style.color = '#1dffad';
