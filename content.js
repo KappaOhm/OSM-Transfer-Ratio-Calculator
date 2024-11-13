@@ -48,7 +48,7 @@ document.addEventListener("click", function(event) {
         console.log(players);
     }
     checkPlayerPrices();
-    const playerNameElement = document.querySelector('h2.player-profile-name[data-bind="text: fullNameWithSquadNumber()"]');
+    const playerNameElement = document.querySelector('h2.player-card-name.ellipsis[data-bind="text: fullNameWithSquadNumber()"]');
     const purchasePriceElement = document.querySelector('span[data-bind="currency: price, roundCurrency: 1, fractionDigits: 1"]')
     || document.querySelector("span.club-funds-amount");
     const playerValueElement = document.querySelector('.player-profile-value span[data-bind^="currency: value"]');
@@ -56,7 +56,7 @@ document.addEventListener("click", function(event) {
     const purchasePrice = playerNameElement ? findPlayerPrice(playerNameElement.innerText) : null;
 
     if (purchasePriceElement && purchasePrice && playerNameElement && playerValueElement && window.location.href.includes("/Transferlist")) {
-        playerValueElement.style.fontSize = "15px"; // Adjust to desired font size
+        playerValueElement.style.fontSize = "17px"; // Adjust to desired font size
         
         console.log('Player value element found:', playerValueElement.innerText);
         console.log('Purchase price element found:', purchasePrice);
@@ -82,7 +82,7 @@ document.addEventListener("click", function(event) {
             let profit = ((maxSellValue - parseFloat(purchasePriceParsed) / 1e6)).toFixed(1);
         
             playerValueElement.innerHTML = `
-                ${playerValueElement.innerText} ><span style="color: #e4ff03;">${maxSellValue.replace('.', ',')}M</span> Profit >>+ 
+                ${playerValueElement.innerText} > <span style="color: #e4ff03;">${maxSellValue.replace('.', ',')}M ^ </span> Profit >>+ 
                 <span style="color: #1dffad;">${profit.replace('.', ',')}M</span>
             `;
         }
