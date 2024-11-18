@@ -180,61 +180,74 @@ function calculateNameMatchScore(searchName, playerName) {
     const search = nameToComponents(searchName);
     const player = nameToComponents(playerName);
     
-    let score = 0;
-
     // If exact match, return 1
     if (search.fullName === player.fullName) {
         return 1.0;
     }
 
+    // Prioritize last name matches
+    if (search.lastName === player.lastName) {
+        // If last names match exactly, give a high base score
+        let score = 0.8;
+        
+        // Add bonus for first name match
+        if (search.firstName === player.firstName) {
+            score += 0.2;
+        }
+        
+        return score;
+    }
+
     // Check if one name contains the other completely
     if (search.fullName.includes(player.fullName) || player.fullName.includes(search.fullName)) {
-        return 0.9;
+        return 0.7;
     }
 
     // Split names into parts
     const searchParts = search.fullName.split(' ');
     const playerParts = player.fullName.split(' ');
 
-    // Check each part of the search name against each part of the player name
-    let matchCount = 0;
-    let totalParts = Math.max(searchParts.length, playerParts.length);
+    // Initialize score with emphasis on last name
+    let score = 0;
+    let lastNameMatch = false;
 
-    searchParts.forEach(searchPart => {
-        if (playerParts.some(playerPart => playerPart === searchPart)) {
-            matchCount++;
-        }
-    });
-
-    score = matchCount / totalParts;
-    if (score < threshold){
-        return score;
+    // Check last name first
+    if (searchParts[searchParts.length - 1] === playerParts[playerParts.length - 1]) {
+        score += 0.6;
+        lastNameMatch = true;
     }
 
-    // Check for name component position matches
-    const searchComponents = [search.firstName, ...search.middleNames, search.lastName];
-    const playerComponents = [player.firstName, ...player.middleNames, player.lastName];
-    
-    let positionPenalty = 0;
-    searchComponents.forEach((component, index) => {
-        const playerIndex = playerComponents.indexOf(component);
-        if (playerIndex !== -1) {
-            // Penalize if the name appears in a different position
-            positionPenalty += Math.abs(index - playerIndex) * 0.1;
+    // Only proceed with first name matching if last name matched or score is still 0
+    if (lastNameMatch || score === 0) {
+        // Check remaining parts with lower weight
+        let remainingMatchCount = 0;
+        const searchRemaining = searchParts.slice(0, -1);
+        const playerRemaining = playerParts.slice(0, -1);
+
+        searchRemaining.forEach(searchPart => {
+            if (playerRemaining.some(playerPart => playerPart === searchPart)) {
+                remainingMatchCount++;
+            }
+        });
+
+        if (searchRemaining.length > 0) {
+            score += (remainingMatchCount / searchRemaining.length) * 0.4;
         }
-    });
+    }
 
-    score = Math.max(0, score - positionPenalty);
-
-    // One last check if we did not meet threshold
-    if (score < threshold){
-        if(search.fullName.includes(player.firstName)){
+    // Additional checks for edge cases
+    if (score < threshold) {
+        // Check if the search name's last name is contained within the player's full name
+        if (player.fullName.includes(search.lastName)) {
+            return 0.5;
+        }
+        // Check if the search name's full name contains the player's last name
+        if (search.fullName.includes(player.lastName)) {
             return 0.5;
         }
     }
-    else {
-        return score;
-    }
+
+    return score;
 }
 
 function findPlayerPrice(fullName) {
@@ -257,7 +270,9 @@ function findPlayerPrice(fullName) {
         "raphael dias belloli": "raphinha",
         "son heung-min": "son",
         "vinicius jose paixao de oliveira junior": "vinicius junior",
-        "ederson santana de moraes": "ederson"
+        "ederson santana de moraes": "ederson",
+        "lucas tolentino coelho de lima": "lucas paqueta",
+        "yassine bounou": "bono"
     };
     
     if (NICKNAME_MAPPINGS[normalizedSearchName]) {
