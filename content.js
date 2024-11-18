@@ -52,6 +52,7 @@ document.addEventListener("click", function(event) {
     const purchasePriceElement = document.querySelector('span[data-bind="currency: price, roundCurrency: 1, fractionDigits: 1"]')
     || document.querySelector("span.club-funds-amount");
     const playerValueElement = document.querySelector('.player-profile-value span[data-bind^="currency: value"]');
+    const playerSquadValueElement = document.querySelectorAll('span.club-funds-amount[data-bind*="playerValue"]');
     const sliderInput = document.querySelector('input.slider.form-control');
     const purchasePrice = playerNameElement ? findPlayerPrice(playerNameElement.innerText) : null;
 
@@ -97,19 +98,21 @@ document.addEventListener("click", function(event) {
             purchasePriceElement.style.color = 'red';
         }
         purchasePriceElement.style.fontWeight = 'bold';
-    } else if (playerValueElement && sliderInput && window.location.href.includes("/Squad")) {
-        const playerValue = parsePrice(playerValueElement.innerText);
+    // Selling players    
+    } else if (playerSquadValueElement[0] && sliderInput && window.location.href.includes("/Squad")) {
+        const playerValue = parsePrice(playerSquadValueElement[0].innerText);
         const sellingPrice = sliderInput.dataset.value;
         console.log('Parsed player value:', playerValue);
         console.log('Parsed selling price:', sellingPrice);
 
         const coefficient = sellingPrice / playerValue;
-        const clubFundsAmountElement = document.querySelector('.player-profile-details .club-funds-amount');
+        console.log('Coefficient:', coefficient);
+        const specificClubFundsElement = document.querySelector('div.set-price-value.font-lg.semi-bold.pull-right .club-funds-amount');
 
         if (coefficient > 1.9 && sellingPrice >= 50000000) {
-            clubFundsAmountElement.style.color = '#e4ff03';
+            specificClubFundsElement.style.color = '#e4ff03';
         } else {
-            clubFundsAmountElement.style.color = '#1dffad';
+            specificClubFundsElement.style.color = '#1dffad';
         }
 
     } else {
