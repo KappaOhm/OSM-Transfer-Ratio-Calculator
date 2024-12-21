@@ -49,8 +49,8 @@ document.addEventListener("click", function(event) {
     }
     checkPlayerPrices();
     const playerNameElement = document.querySelector('h2.player-card-name.ellipsis[data-bind="text: fullNameWithSquadNumber()"]');
-    const purchasePriceElement = document.querySelector('span[data-bind="currency: price, roundCurrency: 1, fractionDigits: 1"]')
-    || document.querySelector("span.club-funds-amount");
+    const purchasePriceElement = document.querySelector('span.club-funds-amount[data-bind="currency: clubFundsCost(), roundCurrency: 1, fractionDigits: 1"]')
+    || document.querySelector('span.club-funds-amount[data-bind="currency: clubFundsCost(), roundCurrency: 2, fractionDigits: 1"]');
     const playerValueElement = document.querySelector('.player-profile-value span[data-bind^="currency: value"]');
     const playerSquadValueElement = document.querySelectorAll('span.club-funds-amount[data-bind*="playerValue"]');
     const sliderInput = document.querySelector('input.slider.form-control');
@@ -74,8 +74,15 @@ document.addEventListener("click", function(event) {
         console.log('Coefficient:', coefficient);
 
         // Check if the coefficient is already appended
-        if (!purchasePriceElement.innerText.includes(' - ')) {
+        if (purchasePriceElement.getAttribute('data-bind').includes('roundCurrency: 2')) {
+            purchasePriceElement.innerText = 'DO NOT BUY' + ' > ' + purchasePriceElement.innerText;
+            purchasePriceElement.style.color = 'red';
+            purchasePriceElement.style.fontWeight = 'bold';
+            return;
+        }
+        else if (!purchasePriceElement.innerText.includes(' - ')) {
             purchasePriceElement.innerText = purchasePriceElement.innerText + ' - ' + coefficient.toFixed(2);
+            
         }
         // Check if MAX sell value is already appended
         if (!playerValueElement.innerText.includes('>>+')) {
@@ -88,7 +95,6 @@ document.addEventListener("click", function(event) {
             `;
         }
         
-
         // Apply visual clues
         if (coefficient <= 1.55 && coefficient > 1.45) {
             purchasePriceElement.style.color = '#e4ff03';
@@ -275,6 +281,8 @@ function findPlayerPrice(fullName) {
         "vinicius jose paixao de oliveira junior": "vinicius junior",
         "ederson santana de moraes": "ederson",
         "lucas tolentino coelho de lima": "lucas paqueta",
+        "danilo luiz da silva": "danilo",
+        "jorge resurreccion merodio" : "koke",
         "yassine bounou": "bono"
     };
     
