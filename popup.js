@@ -23,7 +23,7 @@ window.onclick = function(event) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const VALID_CODE = 'abc12';
+    const VALID_CODE = '1xyz';
     const CODE_VERSION = chrome.runtime.getManifest().version;  // For invalidating old codes
     
     // Load saved state but check version

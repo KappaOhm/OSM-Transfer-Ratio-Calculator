@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "OSM Transfer Ratio Calculator",
-  "version": "1.3.2.7",
+  "version": "1.3.2.8",
   "description": "Calculates price/value ratio in the OSM when buying and selling players",
   "permissions": [
     "storage"
@@ -13,7 +13,7 @@
     {
       "matches": ["https://*.onlinesoccermanager.com/Transferlist",
                   "https://*.onlinesoccermanager.com/Scout",
-                  "https://*.onlinesoccermanager.com/Squad"],
+                  "https://*.onlinesoccermanager.com/Squad*"],
       "js": ["content.js"]
     }
   ],

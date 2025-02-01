@@ -9,9 +9,7 @@ chrome.storage.sync.get('premiumEnabled', function (result) {
 });
 
 function checkPlayerPrices() {
-    // Get the user's savings amount
     let userSavingsElement = document.querySelector('.pull-right[data-bind="currency: $parent.shouldShowSavings() ? $parent.savings() : animatedProgress(), roundCurrency: RoundCurrency.Downwards, fractionDigitsK: 1, fractionDigits: 1"]');
-    // Get all the player price elements
     let playerPriceElements = document.querySelectorAll('[data-bind^="currency: $parent.price"]');
 
     // Loop through the player price elements and update the color if needed
@@ -28,7 +26,6 @@ function getPlayerPricesAndNames() {
     // Get all player rows
     const playerRows = document.querySelectorAll('tr[data-bind*="click: $parents[2].showBuyPlayerModal"]');
     const playerData = [];
-
     playerRows.forEach(row => {
         const playerNameElement = row.querySelector('span[data-bind="text: name"]');
         const playerPriceElement = row.querySelector('span[data-bind^="currency: $parent.price"]');
@@ -77,11 +74,12 @@ document.addEventListener("click", function (event) {
                 }
             });
         }
-        const view = document.querySelector("#cached-html-wrapper-squad > div > div.col-xs-12.col-sm-12.col-md-8.col-h-md-24.col-lg-9.pull-left > div.row.row-h-md-2 > div > ul > li.pull-right.hidden-xs > a");
-        view.innerText = defendersCount + "" + midfieldsCount + "" + forwardsCount;
-        //view.style.fontSize = "17px";
+        const view = document.querySelector("#cached-html-wrapper-squad > div > div.col-xs-12.col-md-4.col-h-md-24.col-lg-3.pull-right > div.row.row-h-md-22.overflow-visible > div > div > div > div > div.row.row-h-xs-3.squad-info-gradient > div > div > h2");
+        if (view != null && view.innerText != null) {
+            view.innerText = defendersCount + "" + midfieldsCount + "" + forwardsCount;
+        }
 
-        const currentTeam = document.querySelector("#cached-html-wrapper-squad > div > div.col-xs-12.col-md-4.col-h-md-24.col-lg-3.pull-right > div.row.row-h-md-22.overflow-visible > div > div > div > div > div.row.row-h-xs-3.squad-info-gradient > div > div > h2");
+        const currentTeam = document.querySelector("#team-dropdown-button > span:nth-child(1)");
         const transfersBody = document.querySelector("tbody[data-bind='foreach: getItems()']");
         if (transfersBody) {
             // Select all player transfer rows within the transfersBody
@@ -93,24 +91,27 @@ document.addEventListener("click", function (event) {
             let dailyEarnValue = 0;
             let startingMoneyValue = 0;
             // Loop through each row and extract the data
-            playerRows.forEach(row => {
+
+            playerRows.forEach((row, index) => {
                 const sourceTeam = row.querySelector("td span[data-bind='text: name']")?.textContent.trim();
                 const transferValue = row.querySelector("td.td-price span.club-funds-amount")?.textContent.trim();
                 if (currentTeam.innerText == sourceTeam) {
                     sell += parsePrice(transferValue);
-                }
-                else {
+                } else {
                     buy += parsePrice(transferValue);
                 }
-                /***
-                const playerName = row.querySelector("td:first-child span[data-bind*='playerPartial().name']")?.textContent.trim();
                 const price = row.querySelector("td.hidden-xs.td-value span.club-funds-amount")?.textContent.trim();
-                const position = row.querySelector("td.td-content-width")?.textContent.trim();
-                const matchDay = row.querySelector("td[data-bind*='weekNr']")?.textContent.trim();
-                const timestamp = row.querySelector("td.hidden-xs.hidden-sm.td-date")?.textContent.trim();
-                console.log({playerName,sourceTeam,price,transferValue,buysell});
-                */
-            });
+                timestampElement = row.querySelector(`#team-transfers > div > div > table > tbody > tr:nth-child(${index + 1}) > td.hidden-xs.hidden-sm.td-content-width.text-right.td-date`);
+                let ratio = (parsePrice(transferValue) / parsePrice(price)).toFixed(2);
+                if(timestampElement!= null && !timestampElement.innerText.includes(' | ')) {
+                    timestampElement.innerText = ratio + " | " + timestampElement.innerText;
+                }
+                if(ratio < 2.0) {
+                    timestampElement.style.color = '#0d3dbd';
+                    timestampElement.style.fontWeight = 'bold';
+                }
+                });
+
             const teamNumber = currentTeam.innerText.match(/\d+/); // Match a number in the string
             if (teamNumber) {
                 const index = teamNumber[0] - 1;
@@ -120,19 +121,20 @@ document.addEventListener("click", function (event) {
                 }
             }
             const matchDay = 4 + parseInt(document.querySelector("#team-transfers > div > div > table > tbody > tr:nth-child(1) > td:nth-child(5)").textContent);
-            const teamValueElement = document.querySelector("#cached-html-wrapper-squad > div > div.col-xs-12.col-md-4.col-h-md-24.col-lg-3.pull-right > div.row.row-h-md-22.overflow-visible > div > div > div > div > div.row.row-h-xs-5.overflow-visible > div > div > div:nth-child(2) > div > div.col-xs-6.col-h-xs-24.flex-pull-right.squad-info-large-stat-container > div > div.col-xs-9.col-h-xs-24.vertical-center.squad-info-stat-text > span");
-            console.log({ buy, sell, 'profit': sell - buy });
+            const teamValueElement = document.querySelector("#cached-html-wrapper-squad > div > div.col-xs-12.col-md-4.col-h-md-24.col-lg-3.pull-right > div.row.row-h-md-22.overflow-visible > div > div > div > div > div.row.row-h-xs-5.overflow-visible > div > div > div:nth-child(1) > div > div.col-xs-6.col-h-xs-24.flex-pull-right.squad-info-large-stat-container > div > div.col-xs-9.col-h-xs-24.vertical-center.squad-info-stat-text > span:nth-child(2)");
             teamValueElement.innerText = (parseFloat((sell - buy) + dailyEarnValue * matchDay + startingMoneyValue) / 1e6).toFixed(2) + "M";
             teamValueElement.style.color = '#e4ff03';
             teamValueElement.style.fontWeight = 'bold';
-        } else {
-            console.log("Parent <tbody> element not found");
         }
+    }
+
+    if (premiumEnabled && window.location.href.includes("/Transferlist")) {
+
     }
 
     if (!alreadyRan) {
         players = getPlayerPricesAndNames();
-        console.log(players);
+        //console.log(players);
     }
     checkPlayerPrices();
     const playerNameElement = document.querySelector('h2.player-card-name.ellipsis[data-bind="text: fullNameWithSquadNumber()"]');
@@ -149,21 +151,12 @@ document.addEventListener("click", function (event) {
     if (purchasePriceElement && purchasePrice && playerNameElement && playerValueElement && window.location.href.includes("/Transferlist")) {
         playerValueElement.style.fontSize = "17px"; // Adjust to desired font size
 
-        console.log('Player value element found:', playerValueElement.innerText);
-        console.log('Purchase price by findPlayerPrice:', purchasePrice);
-        console.log('Purchase price element found:', purchasePriceElement.innerText);
-
         // Parse the values
         const playerValue = parsePrice(playerValueElement.innerText);
         const partBeforeDash = purchasePriceElement.innerText.includes(' - ') ? purchasePriceElement.innerText.split(' -')[0] : purchasePriceElement.innerText;
         const purchasePriceParsed = partBeforeDash != purchasePrice ? parsePrice(partBeforeDash) : parsePrice(purchasePrice);
-
-        console.log('Parsed player value:', playerValue);
-        console.log('Parsed purchase price:', purchasePriceParsed);
-
         // Calculate the coefficient
         const coefficient = purchasePriceParsed / playerValue;
-        console.log('Coefficient:', coefficient);
 
         // Check if the coefficient is already appended
         if (purchasePriceElement.getAttribute('data-bind').includes('roundCurrency: 2')) {
@@ -200,21 +193,15 @@ document.addEventListener("click", function (event) {
     } else if (playerSquadValueElement[0] && sliderInput && window.location.href.includes("/Squad")) {
         const playerValue = parsePrice(playerSquadValueElement[0].innerText);
         const sellingPrice = sliderInput.dataset.value;
-        console.log('Parsed player value:', playerValue);
-        console.log('Parsed selling price:', sellingPrice);
-
         const coefficient = sellingPrice / playerValue;
-        console.log('Coefficient:', coefficient);
         const specificClubFundsElement = document.querySelector('div.set-price-value.font-lg.semi-bold.pull-right .club-funds-amount');
 
-        if (coefficient > 1.9 && sellingPrice >= 50000000) {
+        if (coefficient > 1.90 && sellingPrice >= 50000000) {
             specificClubFundsElement.style.color = '#e4ff03';
         } else {
             specificClubFundsElement.style.color = '#1dffad';
         }
 
-    } else {
-        console.log('Player or price elements not found in the modal!');
     }
 
 });
@@ -355,7 +342,6 @@ function calculateNameMatchScore(searchName, playerName) {
 function findPlayerPrice(fullName) {
     // Check if players data exists
     if (!players || !Array.isArray(players) || players.length === 0) {
-        console.log('Players data not available or empty');
         return null;
     }
 
@@ -395,7 +381,6 @@ function findPlayerPrice(fullName) {
     if (Array.isArray(players)) {
         for (const player of players) {
             const score = calculateNameMatchScore(fullName, player.name);
-
             if (score > bestScore) {
                 bestScore = score;
                 bestMatch = player;
@@ -404,7 +389,7 @@ function findPlayerPrice(fullName) {
     }
 
     if (bestScore >= threshold) {
-        console.log(`Match found for "${fullName}": "${bestMatch.name}" (confidence: ${bestScore.toFixed(2)})`);
+        //console.log(`Match found for "${fullName}": "${bestMatch.name}" (confidence: ${bestScore.toFixed(2)})`);
         return bestMatch.price;
     }
 
